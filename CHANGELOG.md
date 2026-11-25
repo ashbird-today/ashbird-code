@@ -3,6 +3,12 @@
 All notable changes to Ashbird Code are listed here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.47] - 2026-11-25
+
+### Changed
+
+- The model picker now shows which model each option runs on, for example **Ashbird Fast · GLM 5.3 Flash**, and the Ashbird Pro cost prompt names its model. The names come from the server, so they stay correct when a model changes.
+
 ## [0.1.46] - 2026-11-25
 
 ### Changed
