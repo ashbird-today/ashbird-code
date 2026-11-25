@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Account, billing or credits
+    url: https://ashbird.today/contact
+    about: Questions about your Ashbird account, plan or credits.
+  - name: Security problem
+    url: https://github.com/ashbird-today/ashbird-code/blob/main/SECURITY.md
+    about: Please report security problems privately.
