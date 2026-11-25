@@ -3,6 +3,13 @@
 All notable changes to Ashbird Code are listed here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.46] - 2026-11-25
+
+### Changed
+
+- Models are now named **Ashbird Fast**, **Ashbird Pro** and **Ashbird Included** in the picker, status bar and prompts.
+- The own-key (BYOK) provider for the Ashbird EU route is now called `ashbird`. Keys you saved before keep working.
+
 ## [0.1.45] - 2026-11-24
 
 First public Marketplace release. Summary of 0.1.28 to 0.1.45:
