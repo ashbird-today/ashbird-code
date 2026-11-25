@@ -1,0 +1,83 @@
+name: Release
+
+# The private repo's deploy script pushes release/ashbird-code-X.Y.Z.vsix plus CHANGELOG.md to main.
+# This creates the GitHub Release vX.Y.Z with that file, publishes it to the VS Code Marketplace and
+# Open VSX (repo secrets VSCE_PAT / OVSX_PAT; a missing secret skips that store), then removes the
+# .vsix from main again once both stores have it (the Release keeps it). Re-run: Actions > Release > Run workflow.
+on:
+  push:
+    branches: [main]
+    paths: ['release/*.vsix']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Find the package
+        id: pkg
+        run: |
+          shopt -s nullglob
+          files=(release/ashbird-code-*.vsix)
+          [ ${#files[@]} -eq 1 ] || { echo "expected exactly one release/ashbird-code-*.vsix, found ${#files[@]}"; exit 1; }
+          f=${files[0]}
+          v=$(basename "$f" .vsix); v=${v#ashbird-code-}
+          [[ $v =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "bad version in $f"; exit 1; }
+          echo "file=$f" >> "$GITHUB_OUTPUT"
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Release notes from CHANGELOG.md
+        run: |
+          v='${{ steps.pkg.outputs.version }}'
+          awk -v v="$v" '
+            $0 ~ "^## \\[" v "\\]" {on=1; next}
+            on && /^## \[/ {exit}
+            on {print}
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "Ashbird Code $v" > notes.md
+          cat notes.md
+
+      - name: GitHub Release
+        run: |
+          v='${{ steps.pkg.outputs.version }}'
+          if gh release view "v$v" >/dev/null 2>&1; then
+            gh release upload "v$v" '${{ steps.pkg.outputs.file }}' --clobber
+          else
+            gh release create "v$v" '${{ steps.pkg.outputs.file }}' --title "Ashbird Code $v" --notes-file notes.md --target "$GITHUB_SHA"
+          fi
+
+      - uses: actions/setup-node@v4 # TODO pin SHA
+        with:
+          node-version: 20
+
+      - name: Publish to VS Code Marketplace
+        if: env.VSCE_PAT != ''
+        run: npx --yes @vscode/vsce@4 publish --packagePath '${{ steps.pkg.outputs.file }}' --skip-duplicate
+
+      - name: Publish to Open VSX
+        if: env.OVSX_PAT != ''
+        run: npx --yes ovsx publish '${{ steps.pkg.outputs.file }}' -p "$OVSX_PAT" --skip-duplicate
+
+      # Kept on main until both stores have it, so "Run workflow" (workflow_dispatch) can retry after secrets are added.
+      - name: Remove the package from main
+        if: env.VSCE_PAT != '' && env.OVSX_PAT != ''
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898283+github-actions[bot]@users.noreply.github.com'
+          git rm -q release/*.vsix
+          git commit -q -m "release: v${{ steps.pkg.outputs.version }} published, package removed from main"
+          git push origin HEAD:main
