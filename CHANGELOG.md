@@ -3,6 +3,20 @@
 All notable changes to Ashbird Code are listed here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.49] - 2026-11-26
+
+### Changed
+
+- The model picker shows Ashbird Pro as **Kimi K3.1 Pro**.
+- Using your own API key without a subscription now shows a clear notice with a link to start a trial or pick a plan, instead of a raw error.
+
+## [0.1.48] - 2026-11-25
+
+### Fixed
+
+- Commands such as `git log` no longer hang waiting at a pager prompt until the timeout.
+- On Windows the agent is told the shell is PowerShell, so it stops using bash-only syntax like `||`.
+
 ## [0.1.47] - 2026-11-25
 
 ### Changed
