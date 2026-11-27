@@ -3,6 +3,43 @@
 All notable changes to Ashbird Code are listed here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.56] - 2026-11-27
+
+### Changed
+
+- The README's privacy section now describes the onboarding counts and usage telemetry separately and accurately.
+
+## [0.1.55] - 2026-11-27
+
+### Fixed
+
+- On a fresh VS Code start the sidebar showed an empty chat panel until the extension loaded. It now shows "Starting Ashbird…" until the chat is ready.
+
+## [0.1.54] - 2026-11-26
+
+### Changed
+
+- The extension mentions the 7-day Reader trial where plans are offered.
+
+## [0.1.53] - 2026-11-26
+
+### Changed
+
+- Using your own API key is cheaper, and the first 500k BYOK tokens each day are free.
+
+## [0.1.52] - 2026-11-26
+
+### Added
+
+- First-run welcome: the chat opens and offers sign-in on first install.
+- Anonymous onboarding counts (event name and version only). They follow VS Code's telemetry setting; set `ashbird.telemetry` to `false` to turn them off.
+
+## [0.1.50] - 2026-11-26
+
+### Changed
+
+- Scope is now three fixed levels: Budget (32k), Smart (128k) and Long (256k). Lite is removed.
+
 ## [0.1.49] - 2026-11-26
 
 ### Changed
