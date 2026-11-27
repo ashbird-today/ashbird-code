@@ -13,7 +13,7 @@ Ashbird Code is an agentic coding chat for VS Code, Cursor, Windsurf and VSCodiu
 
 <!-- Product screenshots go here. -->
 
-Get started: install, open the Ashbird icon in the sidebar, and sign in. New accounts get starter credits. See [ashbird.today/pricing](https://ashbird.today/pricing).
+Get started: install, open the Ashbird icon in the sidebar, and sign in. Start a free trial (card required) to get starter credits. See [ashbird.today/pricing](https://ashbird.today/pricing).
 
 ## What it does
 
@@ -36,15 +36,17 @@ Usage is metered in credits. See https://ashbird.today/pricing for plans and cre
 
 - Your code goes only to the model call, through the Ashbird gateway with a European model provider.
 - Tools run locally on your machine. File edits, terminal commands and checks never leave your machine except as their output in the model call.
+- To improve Ashbird Code, the gateway keeps anonymous counts derived from the model calls it already handles, for example how often an edit or command failed or the agent repeated itself. These are numbers only, with no code, paths, commands, prompts or output, and there is no per-person view.
 - Sign-in tokens are stored in VS Code SecretStorage.
-- Telemetry follows VS Code's telemetry setting and the `ashbird.telemetry` setting. Both must be on for any usage data to be sent. Telemetry never includes code, paths or prompts.
+- Usage telemetry (counts and durations) is off by default. It is sent only when both VS Code's telemetry setting and `ashbird.telemetry` are on. It never includes code, paths or prompts.
+- Onboarding counts: first run and sign-in steps (started, cancelled, failed, done) are counted by event name and extension version only, with no account, install id or IP. They follow VS Code's telemetry setting; set `ashbird.telemetry` to `false` to turn them off too.
 
 ## Settings
 
 | Setting | Default | Description |
 | --- | --- | --- |
 | `ashbird.apiBase` | `https://api.ashbird.today` | Ashbird API origin. |
-| `ashbird.scope` | `lite` | How much earlier work the model sees. `lite` is the cheapest; `budget` keeps fuller recent history; `smart` and `long` show more and cost more. Also set with **Ashbird: Choose scope**. |
+| `ashbird.scope` | `budget` | **budget**: cheapest, good for focused edits · **smart**: balanced default · **long**: best for large, multi-file tasks. Also set with **Ashbird: Choose scope**. |
 | `ashbird.autoApproveEdits` | `false` | Apply file edits without asking first. |
 | `ashbird.allowCommands` | `[]` | Commands the agent may run without asking. Each entry is a command prefix, for example `npm test`. |
 | `ashbird.denyCommands` | `[]` | Commands the agent may never run. Each entry is a command prefix, for example `rm -rf`. |
@@ -54,7 +56,7 @@ Usage is metered in credits. See https://ashbird.today/pricing for plans and cre
 | `ashbird.testCommand` | empty | Command the done check runs, for example `npm test`. Empty means detect it automatically. |
 | `ashbird.toolFormat` | `native` | How tools are sent to the model. `native` uses tool calling. `text` uses plain-text tool blocks. |
 | `ashbird.sendEditorContext` | `true` | Include the open file and selection from the editor in chat context. |
-| `ashbird.telemetry` | `false` | Send anonymous usage counts and durations. Only used when VS Code telemetry is also on. |
+| `ashbird.telemetry` | `false` | Send anonymous usage counts and durations. Only used when VS Code telemetry is also on. Set it to `false` explicitly to also turn off the onboarding counts (see Privacy). |
 | `ashbird.mcpServers` | `{}` | MCP servers available in every workspace, in the same shape as `.mcp.json` `mcpServers`. |
 | `ashbird.researchConnector` | `false` | Add the built-in Ashbird Research MCP server. Set it from the MCP panel (Connect), or in user settings only; workspace settings cannot enable it. |
 | `ashbird.models.head` | `ashbird` | Model for the main agent: Ask, Questions, Plan, Agent and the Big Task head. `ashbird` or `byok` (your own key). |
